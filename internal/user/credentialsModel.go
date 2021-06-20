@@ -6,16 +6,16 @@ import (
 	"net/http"
 )
 
-type Authentication struct {
+type CredentialsModel struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-func (a *Authentication) FromJSON(body io.ReadCloser) error {
+func (a *CredentialsModel) FromJSON(body io.ReadCloser) error {
 	err := json.NewDecoder(body).Decode(a)
 	return err
 }
 
-func (a *Authentication) ToJSON(w http.ResponseWriter) error {
+func (a *CredentialsModel) ToJSON(w http.ResponseWriter) error {
 	return json.NewEncoder(w).Encode(a)
 }

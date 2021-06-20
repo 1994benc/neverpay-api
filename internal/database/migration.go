@@ -8,7 +8,7 @@ import (
 
 // Migrate our database and create bill table
 func MigrateDB(db *gorm.DB) error {
-	models := []interface{}{&user.User{}}
+	models := []interface{}{&user.UserModel{}}
 	result := db.AutoMigrate(models...)
 	return result.Error
 }

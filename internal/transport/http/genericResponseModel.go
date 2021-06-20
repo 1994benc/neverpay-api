@@ -1,6 +1,6 @@
 package http
 
 // stores responses from API
-type GenericResponse struct {
+type GenericResponseModel struct {
 	Message string
 }
