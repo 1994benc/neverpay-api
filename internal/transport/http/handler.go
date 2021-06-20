@@ -45,7 +45,8 @@ func (handler *Handler) SetupRoutes() {
 	handler.Router.HandleFunc("/api/users/signup", handler.SignUp).Methods(http.MethodPost)
 	handler.Router.HandleFunc("/api/users/signin", handler.SignIn).Methods(http.MethodPost)
 	// Only accessible from a server; requires a secret key to be passed in
-	handler.Router.HandleFunc("/api/verify", handler.VerifyToken).Methods(http.MethodPost)
+	// Example: /api/verify?token=sometoken&scope=scope1,scope2
+	handler.Router.HandleFunc("/api/verify", handler.VerifyToken).Methods(http.MethodGet)
 }
 
 func (h *Handler) SignUp(w http.ResponseWriter, r *http.Request) {
@@ -133,7 +134,14 @@ func (h *Handler) GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) VerifyToken(w http.ResponseWriter, r *http.Request) {
-
+	query := r.URL.Query()
+	token := query.Get("token")
+	if token == "" {
+		http.Error(w, "Token not provided", http.StatusUnauthorized)
+		return
+	}
+	result := h.UserService.ValidateToken(token)
+	result.ToJSON(w)
 }
 
 func (h *Handler) checkIfUserExists(userInstance user.UserModel) bool {

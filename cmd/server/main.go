@@ -32,7 +32,8 @@ func (app *App) RunServer() error {
 	if err != nil {
 		log.Fatalln("Error setting up database")
 	}
-	userService := user.NewUserService(db)
+	t := &user.TokenValidator{}
+	userService := user.NewUserService(db, t)
 	handler := transportHTTP.NewHandler(userService)
 	handler.SetupRoutes()
 	err = http.ListenAndServe(":8080", handler.Router)

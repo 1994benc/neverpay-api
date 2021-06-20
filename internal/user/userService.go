@@ -16,12 +16,14 @@ type UserService interface {
 
 type DefaultUserService struct {
 	DB *gorm.DB
+	T  *TokenValidator
 }
 
 // Returns a new User service
-func NewUserService(db *gorm.DB) *DefaultUserService {
+func NewUserService(db *gorm.DB, t *TokenValidator) *DefaultUserService {
 	return &DefaultUserService{
 		DB: db,
+		T:  t,
 	}
 }
 
@@ -59,4 +61,8 @@ func (s *DefaultUserService) GenerateJWT(email string, role string) (string, err
 		return "", err
 	}
 	return tokenString, nil
+}
+
+func (s *DefaultUserService) ValidateToken(token string) *TokenVerificationResultModel {
+	return &TokenVerificationResultModel{IsTokenValid: s.T.ValidateToken(token)}
 }
